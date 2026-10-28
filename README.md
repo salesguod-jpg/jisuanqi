@@ -4,7 +4,7 @@
 
 ## Windows 用户
 
-本次 Linux 开发环境不提供伪造或未经验证的 Windows exe。将本仓库推送到 GitHub 后，打开 **Actions → Windows executable → 最新成功运行 → Artifacts → SmartCalculatorNotepad-Windows-x64**，下载并解压，双击 `SmartCalculatorNotepad.exe`。也可以在 Actions 手动 Run workflow。构建失败时不会上传成功产物。下载 Artifacts 通常需要登录 GitHub，程序本身不需要登录。
+新版已在 GitHub Windows Runner 上完成测试、打包及 exe 启动自检。[下载舒适大字版 Windows x64](https://github.com/salesguod-jpg/jisuanqi/actions/runs/40628354516/artifacts/12790651409)，解压后双击 `SmartCalculatorNotepad.exe`。也可以打开 **Actions → Windows executable → 最新成功运行 → Artifacts → SmartCalculatorNotepad-Windows-x64** 下载。构建失败时不会上传成功产物。下载 Artifacts 通常需要登录 GitHub，程序本身不需要登录。
 
 尚未签名的程序可能触发 SmartScreen；请核对来源。最终 Windows 10/11、真实中文输入法及独立 exe 验收见验收报告。
 
