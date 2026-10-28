@@ -73,7 +73,14 @@ def test_comfort_enter_and_appearance(tmp_path,monkeypatch):
     window.editor.setPlainText('100/3');window.editor.moveCursor(QTextCursor.End)
     QTest.keyClick(window.editor,Qt.Key_Return);window.refresh()
     assert str(window.lines[0].value).startswith('33.333333333')
+    window.options['font']='DejaVu Sans Mono'
     window.set_option('dark',True);assert window.colors['bg']=='#121A22'
+    window.show();app.processEvents()
+    assert window.editor.font().family()=='DejaVu Sans Mono'
+    first,top,height=next(window.results.visible_blocks())
+    expected=window.editor.blockBoundingGeometry(first).translated(window.editor.contentOffset()).top()
+    expected+=window.editor.viewport().mapToGlobal(window.editor.viewport().rect().topLeft()).y()-window.results.mapToGlobal(window.results.rect().topLeft()).y()
+    assert top==expected
     window.set_option('results',False);assert window.results.isHidden()
     window.set_option('enter_result',False)
     window.editor.setPlainText('500+15%');window.editor.moveCursor(QTextCursor.End)

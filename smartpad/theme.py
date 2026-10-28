@@ -9,7 +9,7 @@ DARK = dict(bg='#121A22', surface='#1A2530', ink='#E3EBF2', muted='#9AACBC',
 def stylesheet(c):
     return f'''
     QMainWindow, QWidget#workspace {{ background: {c['bg']}; color: {c['ink']}; }}
-    QWidget {{ color: {c['ink']}; font-family: "Microsoft YaHei", "Noto Sans CJK SC", sans-serif; }}
+    QWidget {{ color: {c['ink']}; }}
     QMenuBar {{ background: {c['surface']}; padding: 6px 20px; border-bottom: 1px solid {c['border']}; }}
     QMenuBar::item {{ padding: 5px 12px; border-radius: 5px; }}
     QMenuBar::item:selected, QMenu::item:selected {{ background: {c['soft']}; }}
