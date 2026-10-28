@@ -52,3 +52,34 @@ def test_standard_percent_ui_and_legacy_document(tmp_path,monkeypatch):
     assert [window.label(line) for line in window.lines]==['500.15','499.85','75','3,333.3333','575','50','○ 15%']
     assert window.lines[-1].included is False
     window.timer.stop();window.saver.stop();window.deleteLater();app.processEvents()
+
+def test_comfort_enter_and_appearance(tmp_path,monkeypatch):
+    from PySide6.QtTest import QTest
+    from PySide6.QtCore import Qt
+    monkeypatch.setenv('XDG_DATA_HOME',str(tmp_path/'data'))
+    app=QApplication.instance() or QApplication([])
+    monkeypatch.setattr(Window,'restore',lambda self:None)
+    window=Window();window.editor.setPlainText('采购 1,500+2,300')
+    window.editor.moveCursor(QTextCursor.End)
+    QTest.keyClick(window.editor,Qt.Key_Return);window.refresh()
+    assert window.editor.toPlainText()=='采购 1,500+2,300=3800'
+    assert window.total==3800 and window.total_label.text()=='3,800'
+    QTest.keyClick(window.editor,Qt.Key_Return)
+    assert window.editor.toPlainText().endswith('\n')
+    window.editor.setPlainText('500+15%');window.editor.moveCursor(QTextCursor.End)
+    QTest.keyClick(window.editor,Qt.Key_Return)
+    assert window.editor.toPlainText()=='500+15%=500.15'
+    window.editor.undo();assert window.editor.toPlainText()=='500+15%'
+    window.editor.setPlainText('100/3');window.editor.moveCursor(QTextCursor.End)
+    QTest.keyClick(window.editor,Qt.Key_Return);window.refresh()
+    assert str(window.lines[0].value).startswith('33.333333333')
+    window.set_option('dark',True);assert window.colors['bg']=='#121A22'
+    window.set_option('results',False);assert window.results.isHidden()
+    window.set_option('enter_result',False)
+    window.editor.setPlainText('500+15%');window.editor.moveCursor(QTextCursor.End)
+    QTest.keyClick(window.editor,Qt.Key_Return);assert window.editor.toPlainText()=='500+15%\n'
+    window.set_option('enter_result',True)
+    window.editor.setPlainText('500+15%');window.editor.moveCursor(QTextCursor.End)
+    QTest.keyClick(window.editor,Qt.Key_Return,Qt.ShiftModifier)
+    assert window.editor.toPlainText()=='500+15%\n'
+    window.timer.stop();window.saver.stop();window.deleteLater();app.processEvents()

@@ -7,9 +7,15 @@ class CalculationError(ValueError):
 
 TOKEN = re.compile(r'\d+(?:\.\d*)?|\.\d+|[()+*/%\-]')
 
+def normalize_expression(expression):
+    """Only well-formed thousands groups are removed; other commas remain invalid."""
+    expression=expression.translate(str.maketrans({'×':'*','÷':'/','、':'/','（':'(', '）':')','−':'-','％':'%'}))
+    return re.sub(r'(?<![\d.,，])\d{1,3}(?:[,，]\d{3})+(?:\.\d+)?(?![\d.,，])',
+                  lambda match:match.group().replace(',','').replace('，',''),expression)
+
 def calculate(expression):
     """百分号始终表示除以 100；加减不应用金额基数。"""
-    expression = expression.translate(str.maketrans({'×':'*','÷':'/','（':'(', '）':')','−':'-','％':'%'}))
+    expression = normalize_expression(expression)
     if re.search(r'\d\s+\d',expression): raise CalculationError('数字之间缺少运算符')
     expression = re.sub(r'\s+', '', expression)
     if not expression or len(expression) > 2048:

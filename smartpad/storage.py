@@ -38,7 +38,7 @@ def load(path):
     settings=data.get('settings',{})
     # 兼容旧文档：移除历史百分比模式，恢复后统一使用标准数学规则。
     settings.pop('mode',None)
-    for key in ('thousands','autosave','dark','results'):
+    for key in ('thousands','autosave','dark','results','enter_result'):
         if key in settings and not isinstance(settings[key],bool): raise ValueError('设置值无效')
     if not isinstance(settings.get('font',''),str) or not isinstance(settings.get('size',12),int) or not 8<=settings.get('size',12)<=36: raise ValueError('字体设置无效')
     if data.get('path') is not None and not isinstance(data['path'],str): raise ValueError('恢复路径无效')

@@ -15,3 +15,9 @@ def test_invalid(expression):
 
 def test_separate_numbers_rejected():
     with pytest.raises(CalculationError):calculate('1 2')
+
+@pytest.mark.parametrize('expression,expected',[('1,500+2,300','3800'),('1，500+2300','3800'),('1,234.56×2','2469.12'),('100、4','25')])
+def test_comfort_input(expression,expected):assert calculate(expression)==Decimal(expected)
+@pytest.mark.parametrize('expression',['1,00+2','1,234,56','12，34','1,,234'])
+def test_bad_grouping(expression):
+    with pytest.raises(CalculationError):calculate(expression)

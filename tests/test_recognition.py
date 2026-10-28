@@ -35,3 +35,13 @@ def test_long_note():
     text='\n'.join(['费用 0.01']*5000)
     lines,_,total=analyze(text)
     assert len(lines)==5000 and total==50
+
+@pytest.mark.parametrize('text,result',[('采购 1,500+2,300','3800'),('100+200=300','300'),('采购 100+200=300','300'),('100+200=300*2=600','600'),('100/3=33.3333','33.3333')])
+def test_inline_result(text,result):
+    line=recognize(text);assert line.included
+    assert format_number(line.value,False)==result
+    assert analyze(text)[2]==line.value
+@pytest.mark.parametrize('text',['100+200=301','100+200=999*2=1998','100+200=300*2','100+200=','100=100=101'])
+def test_mismatched_equation(text):
+    assert recognize(text).kind=='pending'
+    assert analyze(text)[2]==0
